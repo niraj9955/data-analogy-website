@@ -1,0 +1,134 @@
+// SQLite fallback schema for local development
+// This file is used when MongoDB is not available
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── SITE CONFIGURATION (single row — template settings) ─────────────────
+
+model SiteConfig {
+  id              String   @id @default(cuid())
+  companyName     String   @default("Data Analogy")
+  tagline         String   @default("Turning Enterprise Data Into Scalable Solutions")
+  description     String   @default("Technology services company focused on SAP data migration, software development, and data analytics.")
+  heroTitle       String   @default("Turning Enterprise Data")
+  heroHighlight   String   @default("Into Scalable Solutions")
+  heroSubtitle    String   @default("We help organizations manage, migrate, and make sense of their data with secure, maintainable, and scalable technology solutions.")
+  heroBadge       String   @default("Enterprise Data Solutions")
+  heroBackground  String   @default("/hero-bg.png")
+  stat1Value      String   @default("50+")
+  stat1Label      String   @default("Projects Delivered")
+  stat2Value      String   @default("99.9%")
+  stat2Label      String   @default("Data Accuracy")
+  stat3Value      String   @default("24/7")
+  stat3Label      String   @default("Support")
+  aboutTitle      String   @default("Who We Are?")
+  aboutText1      String   @default("Data Analogy is a technology services company focused on helping organizations manage, migrate, and make sense of their data. We work with enterprises and growing businesses to deliver reliable SAP data migration, software development, and data analytics solutions.")
+  aboutText2      String   @default("Our approach is practical, transparent, and driven by real business requirements — not unnecessary complexity.")
+  whatWeDoTitle   String   @default("What We Do?")
+  whatWeDoItems   String   @default("SAP data migration with validation and data integrity checks|Custom web and software development tailored to business workflows|Data analytics solutions that turn raw data into actionable insights|Data-focused consulting to support scalable system architecture")
+  whatWeDoClosing String   @default("We design solutions that are secure, maintainable, and built to scale.")
+  whyUsTitle      String   @default("Why Data Analogy?")
+  whyUsSubtitle   String   @default("We combine deep technical expertise with a practical approach to deliver solutions that work.")
+  ctaTitle        String   @default("Ready to modernize your data systems?")
+  ctaSubtitle     String   @default("Let's discuss how Data Analogy can help transform your data infrastructure.")
+  ctaButtonText   String   @default("Talk to Our Experts")
+  email           String   @default("contact@dataanalogy.com")
+  phone           String   @default("+1 (555) 123-4567")
+  address         String   @default("Global — Remote First")
+  footerTagline   String   @default("Turning enterprise data into scalable solutions. SAP Data Migration | Software Development | Data Analytics")
+  primaryColor    String   @default("cyan")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// ─── SERVICES ──────────────────────────────────────────────────────────────
+
+model Service {
+  id        String   @id @default(cuid())
+  title     String
+  desc      String
+  icon      String   @default("Code2")
+  color     String   @default("text-cyan-600")
+  bgColor   String   @default("bg-cyan-50")
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── PILLARS ───────────────────────────────────────────────────────────────
+
+model Pillar {
+  id          String   @id @default(cuid())
+  title       String
+  desc        String
+  icon        String   @default("Target")
+  gradient    String   @default("from-red-500 to-red-700")
+  accentColor String   @default("text-red-500")
+  image       String   @default("/pillars/precision-new.png")
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── INDUSTRIES ────────────────────────────────────────────────────────────
+
+model Industry {
+  id        String   @id @default(cuid())
+  name      String
+  icon      String   @default("Factory")
+  desc      String
+  image     String
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── BLOG POSTS ────────────────────────────────────────────────────────────
+
+model Blog {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  excerpt   String
+  content   String   @default("")
+  category  String
+  author    String   @default("Data Analogy Team")
+  date      DateTime @default(now())
+  image     String
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── CONTACT SUBMISSIONS ───────────────────────────────────────────────────
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+// ─── NAV LINKS (configurable) ──────────────────────────────────────────────
+
+model NavLink {
+  id        String   @id @default(cuid())
+  label     String
+  href      String
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

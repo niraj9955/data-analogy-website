@@ -1,0 +1,53 @@
+# ──────────────────────────────────────────────────────────────────────
+# Docker Compose for GoDaddy VPS Deployment
+# ──────────────────────────────────────────────────────────────────────
+#
+# USAGE:
+#   docker compose up -d          → Start production
+#   docker compose logs -f        → View logs
+#   docker compose down           → Stop
+#   docker compose up -d --build  → Rebuild and restart
+#
+# PREREQUISITES:
+#   - Docker & Docker Compose installed on VPS
+#   - .env.production file configured with MongoDB Atlas URI
+#   - Domain DNS pointed to VPS IP
+#
+# ──────────────────────────────────────────────────────────────────────
+
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: data-analogy-app
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.production
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/init"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Nginx reverse proxy (optional - if you want SSL + domain)
+  nginx:
+    image: nginx:alpine
+    container_name: data-analogy-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro  # Mount SSL certs here
+    depends_on:
+      - app
