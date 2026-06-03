@@ -37,16 +37,18 @@ export function ServicesSection({ services }: { services: ServiceData[] }) {
                 key={service.id}
                 className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-gray-100"
               >
-                <CardHeader className="pb-3">
-                  <div
-                    className={`w-14 h-14 rounded-xl ${service.bgColor} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300`}
-                  >
-                    <Icon className={service.color} size={28} />
-                  </div>
-                  <CardTitle className="text-xl font-bold text-gray-900">
-                    {service.title}
-                  </CardTitle>
-                </CardHeader>
+              <CardHeader className="pb-3">
+  <div className="flex items-center gap-3">
+    <div
+      className={`w-12 h-12 shrink-0 rounded-xl ${service.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
+    >
+      <Icon className={service.color} size={24} />
+    </div>
+    <CardTitle className="text-lg font-bold text-gray-900">
+      {service.title}
+    </CardTitle>
+  </div>
+</CardHeader>
                 <CardContent>
                   <p className="text-gray-600 leading-relaxed">{service.desc}</p>
                 </CardContent>
