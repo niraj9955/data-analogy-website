@@ -18,7 +18,9 @@ export function Hero({ siteConfig }: { siteConfig: SiteConfigData }) {
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-900/60 to-cyan-900/50" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-       
+       <Badge className="mb-6 bg-cyan-500/20 text-cyan-300 border-cyan-500/30 px-4 py-1.5 text-sm">
+          {siteConfig.heroBadge}
+        </Badge>
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6">
           {siteConfig.heroTitle}
           <br />
