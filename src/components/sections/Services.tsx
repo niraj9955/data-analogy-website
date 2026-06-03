@@ -34,9 +34,9 @@ export function ServicesSection({ services }: { services: ServiceData[] }) {
             const Icon: LucideIcon = getIcon(service.icon);
             return (
               <Card
-                key={service.id}
-                className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-gray-100"
-              >
+  key={service.id}
+  className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gray-50 border-gray-200"
+>
               <CardHeader className="pb-3">
   <div className="flex items-center gap-3">
     <div
