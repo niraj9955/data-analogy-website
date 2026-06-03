@@ -455,10 +455,9 @@ function CrudTab<T extends CrudItem>({
       const payload: Record<string, unknown> = {};
       _fields.forEach((f) => {
         const val = form[f];
-        if (f === "order" || f === "published") {
-          payload[f] = val === "true" || val === "1";
-        } else if (f === "order") {
-          payload[f] = parseInt(val) || 0;
+        if (f === "order") {
+  payload[f] = parseInt(val) || 0;
+} else if (f === "published") {
         } else {
           payload[f] = val;
         }
