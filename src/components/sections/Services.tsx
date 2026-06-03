@@ -35,7 +35,7 @@ export function ServicesSection({ services }: { services: ServiceData[] }) {
             return (
               <Card
   key={service.id}
-  className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gray-50 border-gray-200"
+ className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gray-50 border-gray-200"
 >
               <CardHeader className="pb-3">
   <div className="flex items-center gap-3">
