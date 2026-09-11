@@ -91,7 +91,7 @@ export default function HomePage() {
         <WhyUs siteConfig={siteConfig} />
         <ContactSection siteConfig={siteConfig} />
       </main>
-      <Footer siteConfig={siteConfig} navLinks={navLinks} services={services} />
+      <Footer siteConfig={siteConfig} />
 
       <button onClick={handleAdminClick} className="fixed bottom-6 right-6 z-40 w-14 h-14 bg-gray-900 hover:bg-gray-800 text-white rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110" aria-label="Admin">
         {isAuthenticated ? <Settings size={24} /> : <Lock size={24} />}
