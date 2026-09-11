@@ -1,6 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { Reveal } from "@/components/Reveal";
 import { getIcon, type LucideIcon } from "@/lib/icons";
 import type { PillarData } from "@/lib/types";
 
@@ -8,24 +9,26 @@ export function PillarsSection({ pillars }: { pillars: PillarData[] }) {
   return (
     <section id="pillars" className="py-20 lg:py-28 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <Badge
-            variant="outline"
-            className="mb-4 border-cyan-200 text-cyan-700"
-          >
-            Our Foundation
-          </Badge>
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Our {pillars.length} Pillars of Engineering
-          </h2>
-        </div>
+        <Reveal>
+          <div className="text-center mb-16">
+            <Badge
+              variant="outline"
+              className="mb-4 border-cyan-200 text-cyan-700"
+            >
+              Our Foundation
+            </Badge>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Our {pillars.length} Pillars of Engineering
+            </h2>
+          </div>
+        </Reveal>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {pillars.map((pillar) => {
+          {pillars.map((pillar, index) => {
             const Icon: LucideIcon = getIcon(pillar.icon);
             return (
+              <Reveal key={pillar.id} delay={index * 0.12}>
               <div
-                key={pillar.id}
                 className="group relative rounded-3xl overflow-hidden h-80 sm:h-96 cursor-pointer"
               >
                 <div
@@ -47,6 +50,7 @@ export function PillarsSection({ pillars }: { pillars: PillarData[] }) {
                   </p>
                 </div>
               </div>
+              </Reveal>
             );
           })}
         </div>

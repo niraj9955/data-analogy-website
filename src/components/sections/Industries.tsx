@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Reveal } from "@/components/Reveal";
 import { getIcon, type LucideIcon } from "@/lib/icons";
 import type { IndustryData } from "@/lib/types";
 
@@ -24,19 +25,22 @@ export function IndustriesSection({ industries }: { industries: IndustryData[] }
   return (
     <section id="industries" className="py-20 lg:py-28 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <Badge
-            variant="outline"
-            className="mb-4 border-cyan-200 text-cyan-700"
-          >
-            Industries
-          </Badge>
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Industries We Serve
-          </h2>
-        </div>
+        <Reveal>
+          <div className="text-center mb-16">
+            <Badge
+              variant="outline"
+              className="mb-4 border-cyan-200 text-cyan-700"
+            >
+              Industries
+            </Badge>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Industries We Serve
+            </h2>
+          </div>
+        </Reveal>
 
         {/* Desktop Carousel */}
+        <Reveal>
         <div className="hidden lg:flex items-center justify-center gap-4">
           <button
             onClick={prev}
@@ -103,8 +107,10 @@ export function IndustriesSection({ industries }: { industries: IndustryData[] }
             <ChevronRight size={24} className="text-gray-600" />
           </button>
         </div>
+        </Reveal>
 
         {/* Mobile: Scrollable Grid */}
+        <Reveal>
         <div
           className="lg:hidden grid grid-cols-2 sm:grid-cols-3 gap-4 max-h-96 overflow-y-auto pr-2"
           style={{
@@ -134,6 +140,7 @@ export function IndustriesSection({ industries }: { industries: IndustryData[] }
             );
           })}
         </div>
+        </Reveal>
       </div>
     </section>
   );

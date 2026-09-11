@@ -22,27 +22,51 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = "https://www.dataanalogy.com";
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "DataAnalogy.Com",
+    alternateName: ["Data Analogy", "DataAnalogy"],
+    url: siteUrl,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "DataAnalogy.Com",
+    alternateName: "Data Analogy",
+    url: siteUrl,
+    logo: `${siteUrl}/icon-64.png`,
+    email: "contact@dataanalogy.com",
+    description:
+      "Technology services company focused on SAP data migration, software development, and data analytics.",
+  },
+];
+
 export const metadata: Metadata = {
-  title: "Data Analogy - Turning Enterprise Data Into Scalable Solutions",
+  metadataBase: new URL(siteUrl),
+  title: "DataAnalogy.Com - Turning Enterprise Data Into Scalable Solutions",
   description:
-    "Data Analogy is a technology services company focused on helping organizations manage, migrate, and make sense of their data. SAP Data Migration, Software Development, and Data Analytics solutions.",
+    "DataAnalogy.Com is a technology services company focused on helping organizations manage, migrate, and make sense of their data. SAP Data Migration, Software Development, and Data Analytics solutions.",
   keywords: [
     "Data Analogy",
+    "DataAnalogy.Com",
     "SAP Data Migration",
     "Software Development",
     "Data Analytics",
     "Enterprise Solutions",
     "Tech Consulting",
   ],
-  authors: [{ name: "Data Analogy" }],
-  icons: {
-    icon: "/logo.svg",
-  },
+  authors: [{ name: "DataAnalogy.Com" }],
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "Data Analogy - Turning Enterprise Data Into Scalable Solutions",
+    title: "DataAnalogy.Com - Turning Enterprise Data Into Scalable Solutions",
     description:
       "Technology services company focused on SAP data migration, software development, and data analytics.",
     type: "website",
+    siteName: "DataAnalogy.Com",
   },
 };
 
@@ -53,6 +77,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body
         className={`${archivo.variable} ${manrope.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >

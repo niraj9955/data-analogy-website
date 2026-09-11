@@ -3,7 +3,6 @@
 import { useState } from "react";
 import {
   Mail,
-  Phone,
   MapPin as LocationIcon,
   Send,
   CheckCircle,
@@ -14,6 +13,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Reveal } from "@/components/Reveal";
 import type { SiteConfigData } from "@/lib/types";
 
 export function ContactSection({ siteConfig }: { siteConfig: SiteConfigData }) {
@@ -51,57 +51,51 @@ export function ContactSection({ siteConfig }: { siteConfig: SiteConfigData }) {
     <section id="contact" className="py-20 lg:py-28 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
-          <div>
-            <Badge
-              variant="outline"
-              className="mb-4 border-cyan-200 text-cyan-700"
-            >
-              Get In Touch
-            </Badge>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
-              Let&apos;s Build Something Great Together
-            </h2>
-            <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-              Whether you need SAP data migration, custom software development,
-              or data analytics solutions, we&apos;re here to help. Reach out and
-              let&apos;s start a conversation.
-            </p>
+          <Reveal>
+            <div>
+              <Badge
+                variant="outline"
+                className="mb-4 border-cyan-200 text-cyan-700"
+              >
+                Get In Touch
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
+                Let&apos;s Build Something Great Together
+              </h2>
+              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                Whether you need SAP data migration, custom software development,
+                or data analytics solutions, we&apos;re here to help. Reach out and
+                let&apos;s start a conversation.
+              </p>
 
-            <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-cyan-50 flex items-center justify-center">
-                  <Mail className="text-cyan-600" size={22} />
+              <div className="space-y-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-cyan-50 flex items-center justify-center">
+                    <Mail className="text-cyan-600" size={22} />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Email</p>
+                    <p className="font-medium text-gray-900">
+                      {siteConfig.email}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-gray-500">Email</p>
-                  <p className="font-medium text-gray-900">
-                    {siteConfig.email}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-cyan-50 flex items-center justify-center">
-                  <Phone className="text-cyan-600" size={22} />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Phone</p>
-                  <p className="font-medium text-gray-900">{siteConfig.phone}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-cyan-50 flex items-center justify-center">
-                  <LocationIcon className="text-cyan-600" size={22} />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Location</p>
-                  <p className="font-medium text-gray-900">
-                    {siteConfig.address}
-                  </p>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-cyan-50 flex items-center justify-center">
+                    <LocationIcon className="text-cyan-600" size={22} />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Location</p>
+                    <p className="font-medium text-gray-900">
+                      {siteConfig.address}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </Reveal>
 
+          <Reveal delay={0.15}>
           <Card className="border-gray-100 shadow-lg">
             <CardContent className="p-6 sm:p-8">
               <form onSubmit={handleSubmit} className="space-y-5">
@@ -188,6 +182,7 @@ export function ContactSection({ siteConfig }: { siteConfig: SiteConfigData }) {
               </form>
             </CardContent>
           </Card>
+          </Reveal>
         </div>
       </div>
     </section>
