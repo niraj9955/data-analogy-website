@@ -33,7 +33,7 @@ export function Navbar({
         <div className="flex items-center justify-between h-16 lg:h-20">
           <a href="#home" className="flex items-center gap-2">
             <div
-              className={`text-xl lg:text-2xl font-bold transition-colors duration-300 ${
+              className={`font-display text-xl lg:text-2xl font-bold tracking-tight transition-colors duration-300 ${
                 scrolled ? "text-gray-900" : "text-white"
               }`}
             >

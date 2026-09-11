@@ -1,14 +1,71 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { SiteConfigData } from "@/lib/types";
+import { AnimatedBackground } from "@/components/sections/AnimatedBackground";
 
 export function Hero({ siteConfig }: { siteConfig: SiteConfigData }) {
+  const bgRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number | null>(null);
+
+  /**
+   * JS parallax — keeps the hero background glued to the viewport while the
+   * user scrolls (TCS.com behaviour). Works on ALL browsers including iOS
+   * Safari, where CSS background-attachment: fixed is unsupported.
+   *
+   * The wrapper is taller than the section (-20% / 140%) so translating it
+   * down by `scrollY` never exposes gaps; the section's overflow-hidden
+   * clips it, so content appears to slide OVER a fixed background.
+   */
+  useEffect(() => {
+    const el = bgRef.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const apply = () => {
+      rafRef.current = null;
+      const y = window.scrollY;
+      // only needed while the hero is anywhere near the viewport
+      if (y <= window.innerHeight * 1.25) {
+        el.style.transform = `translate3d(0, ${y}px, 0)`;
+      }
+    };
+
+    const onScroll = () => {
+      if (rafRef.current === null) {
+        rafRef.current = requestAnimationFrame(apply);
+      }
+    };
+
+    apply();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url(${siteConfig.heroBackground})` }} />
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-900/60 to-cyan-900/50" />
+      {/* Parallax background stack — JS keeps this pinned to the viewport */}
+      <div
+        ref={bgRef}
+        className="absolute left-0 right-0 -top-[20%] h-[140%] will-change-transform"
+      >
+        {/* base brand image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${siteConfig.heroBackground})` }}
+        />
+        {/* TCS-style flowing wave animation */}
+        <AnimatedBackground className="absolute inset-0 h-full w-full mix-blend-screen" />
+        {/* readability overlay (moves with the stack => stays 'fixed' too) */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-900/60 to-cyan-900/50" />
+      </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6">
@@ -29,7 +86,7 @@ export function Hero({ siteConfig }: { siteConfig: SiteConfigData }) {
             </Button>
           </a>
           <a href="#contact">
-            
+
           </a>
         </div>
 
