@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import type { InitData } from "@/lib/types";
 import { LoadingScreen } from "@/components/sections/LoadingScreen";
 import { Navbar } from "@/components/sections/Navbar";
-import { Hero } from "@/components/sections/Hero";
+import { HeroSlider } from "@/components/sections/HeroSlider";
 import { About } from "@/components/sections/About";
 import { ServicesSection } from "@/components/sections/Services";
 import { PillarsSection } from "@/components/sections/Pillars";
@@ -43,7 +43,7 @@ export default function HomePage() {
     <div className="min-h-screen flex flex-col">
       <Navbar navLinks={navLinks} companyName={siteConfig.companyName} />
       <main className="flex-1">
-        <Hero siteConfig={siteConfig} />
+        <HeroSlider siteConfig={siteConfig} pillars={pillars} />
         <About siteConfig={siteConfig} />
         <ServicesSection services={services} />
         <PillarsSection pillars={pillars} />

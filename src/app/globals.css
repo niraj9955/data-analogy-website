@@ -128,3 +128,9 @@
   }
   h1 { letter-spacing: -0.03em; }
 }
+
+/* HeroSlider — 3D pillar ring spin */
+@keyframes hero-ring-spin {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(360deg); }
+}
