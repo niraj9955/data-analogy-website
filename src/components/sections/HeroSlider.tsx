@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Pause, Play } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { PillarData, SiteConfigData } from "@/lib/types";
 import { AnimatedBackground } from "@/components/sections/AnimatedBackground";
@@ -11,27 +11,31 @@ import { AnimatedBackground } from "@/components/sections/AnimatedBackground";
  * TCS.com-style cinematic hero slider.
  * 4 auto-rotating full-screen slides, each with its own animated scene:
  *   1. "4 Pillars of Digital Transformation" — flowing waves + 3D rotating pillar cards
- *   2. Company hero — headline, subtitle, CTAs and stats (the site's SEO h1 lives here)
- *   3. "5-Stage Data Transformation Journey" — perspective grid floor + path drawing
- *      itself with numbered pins popping in one by one
- *   4. "5-Layer Enterprise Data Stack" — waves + translucent 3D layers stacking bottom-up
- * Chrome: pause/play (bottom-left), progress indicators (bottom-center), per-slide CTA
- * (bottom-right). Auto-advance pauses when the tab is hidden or the hero is off-screen.
+ *   2. Company hero — headline, subtitle, CTAs and stats
+ *   3. "5-Stage Data Transformation Journey" — perspective grid floor + self-drawing path
+ *   4. "5-Layer Enterprise Data Stack" — translucent 3D layers stacking bottom-up
+ * Auto-advances every 7s (no pause button, no progress bars — clean chrome).
+ * All slide content renders BELOW the fixed navbar via top padding.
+ * Auto-advance freezes when the tab is hidden or the hero is off-screen.
  */
 
-const DURATION = 12000; // ms per slide
+const DURATION = 7000; // ms per slide
 const YELLOW = "#FFB400";
+const SLIDE_COUNT = 4;
+
+/* Top clearance so content never sits under the fixed navbar (h-16 / lg:h-20) */
+const BELOW_NAV = "pt-24 lg:pt-28";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 38, filter: "blur(8px)" },
-  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.9, ease: EASE } },
+  hidden: { opacity: 0, y: 34, filter: "blur(8px)" },
+  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.7, ease: EASE } },
 };
 
 const stagger = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.16, delayChildren: 0.35 } },
+  show: { transition: { staggerChildren: 0.12, delayChildren: 0.25 } },
 };
 
 /* ── Deep navy TCS-like gradient backdrop ─────────────────────────────── */
@@ -99,42 +103,39 @@ function PillarRing({ pillars }: { pillars: PillarData[] }) {
       <motion.div
         initial={reduce ? false : { opacity: 0, scale: 0.85 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1, delay: 0.4, ease: EASE }}
+        transition={{ duration: 0.8, delay: 0.3, ease: EASE }}
         className="scale-[0.58] sm:scale-75 lg:scale-90"
       >
         <div
           className="relative [transform-style:preserve-3d]"
           style={{ animation: reduce ? undefined : "hero-ring-spin 26s linear infinite" }}
         >
-        {items.map((p, i) => (
-          <div
-            key={p.id ?? i}
-            className="absolute left-1/2 top-1/2 w-[240px] sm:w-[280px] h-[150px] sm:h-[176px] -ml-[120px] sm:-ml-[140px] -mt-[75px] sm:-mt-[88px] rounded-2xl overflow-hidden ring-1 ring-white/25 shadow-[0_24px_60px_rgba(0,0,0,0.55)]"
-            style={{
-              transform: `rotateY(${i * angle}deg) translateZ(${radius}px)`,
-              backfaceVisibility: "hidden",
-            }}
-          >
-            {/* pillar artwork / fallback gradient */}
+          {items.map((p, i) => (
             <div
-              className="absolute inset-0 bg-cover bg-center"
+              key={p.id ?? i}
+              className="absolute left-1/2 top-1/2 w-[240px] sm:w-[280px] h-[150px] sm:h-[176px] -ml-[120px] sm:-ml-[140px] -mt-[75px] sm:-mt-[88px] rounded-2xl overflow-hidden ring-1 ring-white/25 shadow-[0_24px_60px_rgba(0,0,0,0.55)]"
               style={{
-                backgroundImage: p.image ? `url(${p.image})` : undefined,
-                background:
-                  !p.image
-                    ? "linear-gradient(140deg,#123163,#081c38)"
-                    : undefined,
+                transform: `rotateY(${i * angle}deg) translateZ(${radius}px)`,
+                backfaceVisibility: "hidden",
               }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#04101f]/95 via-[#04101f]/45 to-transparent" />
-            <div className="absolute bottom-0 inset-x-0 p-4">
-              <p className="text-white font-bold tracking-[0.18em] text-sm sm:text-base" style={{ color: YELLOW }}>
-                {p.title}
-              </p>
-              <p className="text-white/70 text-[11px] sm:text-xs mt-1 line-clamp-2">{p.desc}</p>
+            >
+              {/* pillar artwork / fallback gradient */}
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{
+                  backgroundImage: p.image ? `url(${p.image})` : undefined,
+                  background: !p.image ? "linear-gradient(140deg,#123163,#081c38)" : undefined,
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#04101f]/95 via-[#04101f]/45 to-transparent" />
+              <div className="absolute bottom-0 inset-x-0 p-4">
+                <p className="font-bold tracking-[0.18em] text-sm sm:text-base" style={{ color: YELLOW }}>
+                  {p.title}
+                </p>
+                <p className="text-white/70 text-[11px] sm:text-xs mt-1 line-clamp-2">{p.desc}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
         </div>
       </motion.div>
       {/* soft glow under the ring */}
@@ -273,7 +274,7 @@ function JourneyScene() {
             strokeLinecap="round"
             initial={{ pathLength: reduce ? 1 : 0 }}
             animate={{ pathLength: 1 }}
-            transition={{ duration: 2.8, ease: "easeInOut", delay: 0.5 }}
+            transition={{ duration: 1.6, ease: "easeInOut", delay: 0.3 }}
           />
         </svg>
 
@@ -285,7 +286,7 @@ function JourneyScene() {
             style={{ left: `${p.x}%`, top: `${p.y}%` }}
             initial={reduce ? false : { opacity: 0, scale: 0.4, y: 26 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ delay: 1.1 + i * 0.85, duration: 0.55, ease: EASE }}
+            transition={{ delay: 0.7 + i * 0.4, duration: 0.5, ease: EASE }}
           >
             <div className="-translate-x-1/2 -translate-y-1/2 relative">
               <div
@@ -306,7 +307,7 @@ function JourneyScene() {
         <motion.p
           initial={reduce ? false : { opacity: 0, filter: "blur(6px)" }}
           animate={{ opacity: 1, filter: "blur(0px)" }}
-          transition={{ delay: 5.6, duration: 1 }}
+          transition={{ delay: 3.2, duration: 0.8 }}
           className="absolute right-[2%] top-[16%] text-white text-xl sm:text-3xl font-bold tracking-wide"
         >
           Data <span style={{ color: YELLOW }}>+</span> AI
@@ -340,7 +341,7 @@ function StackScene() {
               key={layer.title}
               initial={reduce ? false : { opacity: 0, y: 90 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 + (STACK.length - 1 - i) * 0.5, duration: 0.8, ease: EASE }}
+              transition={{ delay: 0.3 + (STACK.length - 1 - i) * 0.3, duration: 0.7, ease: EASE }}
               className="absolute left-1/2 top-1/2 w-[300px] h-[300px] -ml-[150px] -mt-[150px]"
             >
               {/* static isometric transform lives on a child (framer animates the parent) */}
@@ -361,7 +362,10 @@ function StackScene() {
                     backdropFilter: "blur(2px)",
                   }}
                 />
-                <div className="absolute left-full ml-6 top-1/2 -translate-y-1/2 whitespace-nowrap" style={{ transform: "rotateZ(45deg)" }}>
+                <div
+                  className="absolute left-full ml-6 top-1/2 -translate-y-1/2 whitespace-nowrap"
+                  style={{ transform: "rotateZ(45deg)" }}
+                >
                   <p className="text-white font-semibold text-sm sm:text-base">{layer.title}</p>
                   <p className="hidden sm:block text-white/55 text-xs mt-0.5">{layer.desc}</p>
                 </div>
@@ -382,8 +386,6 @@ const SLIDE_CTAS = [
   { label: "Our Services", href: "#services" },
 ];
 
-const SLIDE_COUNT = 4;
-
 export function HeroSlider({
   siteConfig,
   pillars,
@@ -394,7 +396,6 @@ export function HeroSlider({
   const reduce = useReducedMotion();
   const [index, setIndex] = useState(0);
   const [elapsed, setElapsed] = useState(0);
-  const [paused, setPaused] = useState(false);
   const inViewRef = useRef(true);
   const touchX = useRef<number | null>(null);
 
@@ -403,10 +404,10 @@ export function HeroSlider({
     setElapsed(0);
   }, []);
 
-  /* auto-advance ticker — freezes when paused / tab hidden / off-screen */
+  /* auto-advance ticker — freezes when tab hidden / hero off-screen */
   useEffect(() => {
     const id = setInterval(() => {
-      if (reduce || paused || document.hidden || !inViewRef.current) return;
+      if (reduce || document.hidden || !inViewRef.current) return;
       setElapsed((e) => {
         if (e + 100 >= DURATION) {
           setIndex((i) => (i + 1) % SLIDE_COUNT);
@@ -416,7 +417,7 @@ export function HeroSlider({
       });
     }, 100);
     return () => clearInterval(id);
-  }, [paused, reduce]);
+  }, [reduce]);
 
   /* pause auto-advance while hero is scrolled out of view */
   useEffect(() => {
@@ -431,8 +432,6 @@ export function HeroSlider({
     io.observe(section);
     return () => io.disconnect();
   }, []);
-
-  const progress = Math.min(100, (elapsed / DURATION) * 100);
 
   const onTouchStart = (e: React.TouchEvent) => {
     touchX.current = e.touches[0].clientX;
@@ -465,11 +464,11 @@ export function HeroSlider({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 1.04 }}
-            transition={{ duration: 0.85, ease: EASE }}
+            transition={{ duration: 0.7, ease: EASE }}
           >
             <NavyBackdrop />
             <AnimatedBackground className="absolute inset-0 h-full w-full mix-blend-screen" />
-            <div className="relative z-10 h-full max-w-7xl mx-auto px-6 lg:px-10 grid lg:grid-cols-2 gap-6 items-center pt-20 pb-28">
+            <div className={`relative z-10 h-full max-w-7xl mx-auto px-6 lg:px-10 grid lg:grid-cols-2 gap-6 items-center ${BELOW_NAV} pb-20`}>
               <div>
                 <BigNumber n="4">Pillars of Digital Transformation</BigNumber>
                 <motion.p
@@ -495,7 +494,7 @@ export function HeroSlider({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 1.04 }}
-            transition={{ duration: 0.85, ease: EASE }}
+            transition={{ duration: 0.7, ease: EASE }}
           >
             {/* city/network brand image + subtle waves, TCS-like */}
             <div className="absolute inset-0">
@@ -511,7 +510,7 @@ export function HeroSlider({
               variants={stagger}
               initial="hidden"
               animate="show"
-              className="relative z-10 h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center pb-24"
+              className={`relative z-10 h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center ${BELOW_NAV} pb-16`}
             >
               <motion.h2
                 variants={fadeUp}
@@ -543,7 +542,7 @@ export function HeroSlider({
                   Get in Touch
                 </a>
               </motion.div>
-              <motion.div variants={fadeUp} className="mt-14 grid grid-cols-3 gap-8 max-w-lg mx-auto">
+              <motion.div variants={fadeUp} className="mt-10 grid grid-cols-3 gap-8 max-w-lg mx-auto">
                 {[
                   { value: siteConfig.stat1Value, label: siteConfig.stat1Label },
                   { value: siteConfig.stat2Value, label: siteConfig.stat2Label },
@@ -569,11 +568,11 @@ export function HeroSlider({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 1.04 }}
-            transition={{ duration: 0.85, ease: EASE }}
+            transition={{ duration: 0.7, ease: EASE }}
           >
             <NavyBackdrop />
             <GridFloorCanvas className="absolute inset-0 h-full w-full" />
-            <div className="relative z-10 h-full flex flex-col items-center justify-center pb-24">
+            <div className={`relative z-10 h-full flex flex-col items-center justify-center ${BELOW_NAV} pb-14`}>
               <JourneyScene />
             </div>
           </motion.div>
@@ -587,49 +586,18 @@ export function HeroSlider({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 1.04 }}
-            transition={{ duration: 0.85, ease: EASE }}
+            transition={{ duration: 0.7, ease: EASE }}
           >
             <NavyBackdrop />
             <AnimatedBackground className="absolute inset-0 h-full w-full mix-blend-screen" />
-            <div className="relative z-10 h-full flex items-center justify-center pb-24">
+            <div className={`relative z-10 h-full flex items-center justify-center ${BELOW_NAV} pb-14`}>
               <StackScene />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* ════ slider chrome ════ */}
-      {/* pause / play */}
-      <button
-        type="button"
-        onClick={() => setPaused((p) => !p)}
-        aria-label={paused ? "Play slides" : "Pause slides"}
-        className="absolute bottom-6 left-5 sm:left-8 z-30 w-10 h-10 rounded-full border border-white/25 bg-white/10 backdrop-blur flex items-center justify-center text-white hover:bg-white/20 transition-colors"
-      >
-        {paused ? <Play size={16} /> : <Pause size={16} />}
-      </button>
-
-      {/* progress indicators */}
-      <div className="absolute bottom-7 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2.5">
-        {Array.from({ length: SLIDE_COUNT }).map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            aria-label={`Go to slide ${i + 1}`}
-            onClick={() => goTo(i)}
-            className="relative h-1 w-9 sm:w-12 rounded-full bg-white/25 overflow-hidden"
-          >
-            {i === index && (
-              <div
-                className="absolute inset-y-0 left-0 bg-white rounded-full"
-                style={{ width: `${progress}%`, transition: "width 100ms linear" }}
-              />
-            )}
-          </button>
-        ))}
-      </div>
-
-      {/* per-slide CTA (hidden on small screens) */}
+      {/* per-slide CTA (hidden on small screens) — only remaining chrome */}
       <a
         href={SLIDE_CTAS[index].href}
         className="absolute bottom-5 right-5 sm:right-8 z-30 hidden sm:inline-flex items-center gap-2 bg-[#1467d2] hover:bg-[#0f57b6] text-white text-sm font-medium rounded-full px-6 py-2.5 shadow-lg transition-colors"

@@ -117,6 +117,10 @@
   * {
     @apply border-border outline-ring/50;
   }
+  /* fixed navbar (h-16 / lg:h-20) — keep anchored sections clear of it */
+  html {
+    scroll-padding-top: 5.5rem;
+  }
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
